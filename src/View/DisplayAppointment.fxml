@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="642.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.DisplayAllAppointmentController">
+   <children>
+      <TableView fx:id="displayAppointmentTableView" layoutX="15.0" layoutY="31.0" prefHeight="403.0" prefWidth="907.0">
+        <columns>
+          <TableColumn fx:id="id_col" prefWidth="52.0" text="Appointment_ID" />
+          <TableColumn fx:id="title_Col" prefWidth="111.0" text="Title" />
+            <TableColumn fx:id="description_Col" prefWidth="62.0" text="Description" />
+            <TableColumn fx:id="location_Col" prefWidth="72.0" text="Location" />
+            <TableColumn fx:id="type_Col" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="start_Col" prefWidth="77.0" text="Start_Time" />
+            <TableColumn fx:id="end_Col" prefWidth="94.0" text="End_Time" />
+            <TableColumn fx:id="create_Date_Col" prefWidth="102.0" text="Create_Date" />
+            <TableColumn fx:id="created_By_Col" prefWidth="98.0" text="Created_By" />
+            <TableColumn fx:id="last_Updated_Col" prefWidth="161.0" text="Last_Update" />
+        </columns>
+      </TableView>
+      <Button layoutX="851.0" layoutY="479.0" mnemonicParsing="false" onAction="#OnActionBackToMainScreen" prefHeight="27.0" prefWidth="53.0" text="Back" />
+      <RadioButton fx:id="toggleViewInMonths" layoutX="264.0" layoutY="484.0" mnemonicParsing="false" text="View in Month">
+         <toggleGroup>
+            <ToggleGroup fx:id="changeView" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="toggleViewInWeeks" layoutX="378.0" layoutY="484.0" mnemonicParsing="false" text="View in Weeks" toggleGroup="$changeView" />
+      <Button layoutX="773.0" layoutY="479.0" mnemonicParsing="false" onAction="#OnActionDeleteAppointment" text="Delete" />
+      <Button layoutX="513.0" layoutY="479.0" mnemonicParsing="false" onAction="#OnActionViewInWeeksMonth" text="View in Weeks/Month" />
+      <Button layoutX="683.0" layoutY="479.0" mnemonicParsing="false" onAction="#OnActionUpdateAppointment" text="Update" />
+   </children>
+</AnchorPane>
