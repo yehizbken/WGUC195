@@ -65,13 +65,17 @@ public class LoginController implements Initializable {
 
     @FXML
     private Label timeLbl;
+    
+    @FXML
+    private Button LogInSignInButton;
+
 
     private ResourceBundle rb;
 
     private String username, password;
 
     private Boolean test, test1;
-     private Boolean work = true;
+    private ResourceBundle resource;
 
     public String getUsername() {
         return username;
@@ -100,31 +104,20 @@ public class LoginController implements Initializable {
 
     @FXML
     void OnActionSignInLogin(ActionEvent event) throws IOException, SQLException {
-       // transferScreen(event);
-       
+        // transferScreen(event);
+
         if (checkUsernameAndPassword()) {
+
             transferScreen(event);
-        } 
-        else 
-             showError("error", "UserName and/or Password doesnt match", "");
+        } else {
+            if (resource.getLocale().getLanguage().equals("fr")) {
+                showError(resource.getString("Error"), resource.getString("Match"), "");
 
-
-    }
-
-    public ResourceBundle getResourceBundle() {
-
-        try {
-            Properties property = new Properties();
-            Locale locale = Locale.getDefault();
-            ResourceBundle rb = ResourceBundle.getBundle("/Utility/Bundle", locale);
-                    
-            //rb = ResourceBundle.getBundle("Bundle", Locale.getDefault());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
+            } else {
+                showError("error", "UserName and/or Password doesnt match", "");
+            }
         }
-        return rb;
+
     }
 
     public void showError(String headerText, String contentText, String titleText) {
@@ -145,6 +138,16 @@ public class LoginController implements Initializable {
 
     public void setLocale() {
         Locale myLocale = Locale.getDefault();
+        if (myLocale.getLanguage().equals("fr")) {
+            resource = ResourceBundle.getBundle("Utility/Bundle", myLocale);
+            System.out.println(resource.getLocale().getDisplayLanguage());
+            UserNameLabel.setText(resource.getString("UsernameLabel"));
+            PasswordLabel.setText(resource.getString("PasswordLabel"));
+            LogInSignInButton.setText(resource.getString("SignIn"));
+        } else {
+            System.out.println("uggh" + myLocale.getDisplayLanguage());
+
+        }
         DateLbl.setText(myLocale.getDisplayCountry());
 
     }
@@ -161,63 +164,78 @@ public class LoginController implements Initializable {
 
         String userName = UserNameTXT.getText().trim();
         String passWord = PasswordTXT.getText().trim();
-        if (userName.isEmpty()) {
-            showError("Empty", "UserName is empty", "Alert");
-        //  return false;
-        } else if (passWord.isEmpty()) {
-            showError("Empty", "Password is empty", "Alert");
-         //  return false;
+        if (resource.getLocale().getLanguage().equals("fr")) {
+            if (userName.isEmpty()) {
+                showError(resource.getString("Empty"), resource.getString("UserName"), resource.getString("Alert"));
+                //  return false;
+
+            } else if (passWord.isEmpty()) {
+                showError(resource.getString("Empty"), resource.getString("Password"), resource.getString("Alert"));
+                //  return false;
+            } else {
+                return validateUserAndPassword(userName, passWord);
+
+            }
+
         } else {
-          return validateUserAndPassword(userName, passWord);
-         
+
+            if (userName.isEmpty()) {
+                showError("Empty", "UserName is empty", "Alert");
+                //  return false;
+            } else if (passWord.isEmpty()) {
+                showError("Empty", "Password is empty", "Alert");
+                //  return false;
+            } else {
+                return validateUserAndPassword(userName, passWord);
+
+            }
+
         }
-       
-    return null;
+        return null;
     }
 
     public Boolean validateUserAndPassword(String username, String password) throws SQLException {
-         Boolean checker = false;
+        Boolean checker = false;
         try {
             JDBC.openConnection();
             Connection conn = JDBC.getConnection();
             String statement = "SELECT * FROM users WHERE User_Name = ? AND Password =? ";
             PreparedStatement ps = conn.prepareStatement(statement);
-            ps.setString(1,username );
+            ps.setString(1, username);
             ps.setString(2, password);
-           
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-               String  username1 = rs.getString("User_Name");
+                String username1 = rs.getString("User_Name");
                 String password2 = rs.getString("Password");
-            if(username1.equals(username)&& password2.equals(password)){
-                checker = true;
-                if(username.equals("test")){
-                ZonedDateTime zdt = ZonedDateTime.now();
-                Timestamp timestamp = Timestamp.valueOf(zdt.toLocalDateTime());
-                user = new User(0,username,password,zdt.toLocalDateTime(),timestamp);
-                System.out.println("1");
+                if (username1.equals(username) && password2.equals(password)) {
+                    checker = true;
+                    if (username.equals("test")) {
+                        ZonedDateTime zdt = ZonedDateTime.now();
+                        Timestamp timestamp = Timestamp.valueOf(zdt.toLocalDateTime());
+                        user = new User(0, username, password, zdt.toLocalDateTime(), timestamp);
+                        System.out.println("1");
+                    } else {
+                        ZonedDateTime zdt = ZonedDateTime.now();
+                        Timestamp timestamp = Timestamp.valueOf(zdt.toLocalDateTime());
+                        user = new User(0, username, password, zdt.toLocalDateTime(), timestamp);
+                        System.out.println("2");
+                    }
+                    return checker;
+
+                } else {
+                    return checker;
+
                 }
-                else{
-                ZonedDateTime zdt = ZonedDateTime.now();
-                Timestamp timestamp = Timestamp.valueOf(zdt.toLocalDateTime());
-                user = new User(0,username,password,zdt.toLocalDateTime(),timestamp); 
-                System.out.println("2");
-                }
-                return checker;
-                
-            }
-           else {
-          return checker; 
-          
-        }
-            
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-     return checker;
+        return checker;
     }
+
     public User getUser() {
         return user;
     }
@@ -228,8 +246,10 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setLocale();
         setZoneId();
+
     }
 
 }
